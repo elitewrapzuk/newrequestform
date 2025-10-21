@@ -77,72 +77,34 @@
       <section class="card hidden" id="quickContact">
         <h2>Basic details</h2>
         <div class="grid cols-2">
-          <div>
-            <label for="nameQuick">Full name</label>
-            <input id="nameQuick" name="nameQuick" type="text" placeholder="e.g. Jane Doe" required>
-          </div>
-          <div>
-            <label for="emailQuick">Email</label>
-            <input id="emailQuick" name="emailQuick" type="email" placeholder="you@example.com" required>
-          </div>
+          <div><label for="nameQuick">Full name</label><input id="nameQuick" name="nameQuick" type="text" placeholder="e.g. Jane Doe" required></div>
+          <div><label for="emailQuick">Email</label><input id="emailQuick" name="emailQuick" type="email" placeholder="you@example.com" required></div>
         </div>
         <div class="grid cols-2">
-          <div>
-            <label for="phoneQuick">Phone</label>
-            <input id="phoneQuick" name="phoneQuick" type="tel" placeholder="+44 …" required>
-          </div>
-          <div>
-            <label for="prefQuick">Preferred contact</label>
-            <select id="prefQuick" name="prefQuick" required>
-              <option value="">Select…</option>
-              <option>WhatsApp</option>
-              <option>Email</option>
-            </select>
-          </div>
+          <div><label for="phoneQuick">Phone</label><input id="phoneQuick" name="phoneQuick" type="tel" placeholder="+44 ..." required></div>
+          <div><label for="prefQuick">Preferred contact</label><select id="prefQuick" name="prefQuick" required><option value="">Select…</option><option>WhatsApp</option><option>Email</option></select></div>
         </div>
         <div class="grid cols-2">
-          <div>
-            <label for="postcodeQuick">Postcode</label>
-            <input id="postcodeQuick" name="postcodeQuick" type="text" placeholder="e.g. B1 1AA" required>
-          </div>
+          <div><label for="postcodeQuick">Postcode</label><input id="postcodeQuick" name="postcodeQuick" type="text" placeholder="e.g. B1 1AA" required></div>
         </div>
-        <label class="chip" style="margin-top:8px">
-          <input type="checkbox" id="agreeQuick" required> I agree to the terms and understand I must send photos/videos quoting my reference
-        </label>
+        <label class="chip" style="margin-top:8px"><input type="checkbox" id="agreeQuick" required> I agree to the terms and understand I must send photos/videos quoting my reference</label>
       </section>
 
       <div id="fullForm" class="hidden">
         <section class="card">
           <h2>Client details</h2>
           <div class="grid cols-2">
-            <div>
-              <label for="name">Full name</label>
-              <input id="name" name="name" type="text" placeholder="e.g. Jane Doe" required>
-            </div>
-            <div>
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" placeholder="you@example.com" required>
-            </div>
+            <div><label for="name">Full name</label><input id="name" name="name" type="text" placeholder="e.g. Jane Doe" required></div>
+            <div><label for="email">Email</label><input id="email" name="email" type="email" placeholder="you@example.com" required></div>
           </div>
           <div class="grid cols-2">
-            <div>
-              <label for="phone">Phone</label>
-              <input id="phone" name="phone" type="tel" placeholder="+44 …" required>
-            </div>
-            <div>
-              <label>Preferred contact</label>
-              <div class="choices">
-                <label class="chip"><input type="radio" name="preferredContact" value="WhatsApp" required> WhatsApp</label>
-                <label class="chip"><input type="radio" name="preferredContact" value="Email"> Email</label>
-              </div>
-            </div>
+            <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" placeholder="+44 ..." required></div>
+            <div><label>Preferred contact</label><div class="choices"><label class="chip"><input type="radio" name="preferredContact" value="WhatsApp" required> WhatsApp</label><label class="chip"><input type="radio" name="preferredContact" value="Email"> Email</label></div></div>
           </div>
         </section>
       </div>
 
-      <div class="submitbar">
-        <button class="btn" type="submit" style="width:100%;font-size:1.05rem">Submit</button>
-      </div>
+      <div class="submitbar"><button class="btn" type="submit" style="width:100%;font-size:1.05rem">Submit</button></div>
 
       <section class="card hidden" id="confirmation">
         <h2>Thank you! 🎉</h2>
@@ -155,32 +117,57 @@
   <div class="toast" id="toast">Copied!</div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzKOgLj3sOU61mrUQRzXqr0nuWwaCkky7RMPgYrsqQk5wsaoZnExfSePKstzIMrxJDyBA/exec";
-
+    const SCRIPT_URL="https://script.google.com/macros/s/AKfycbzKOgLj3sOU61mrUQRzXqr0nuWwaCkky7RMPgYrsqQk5wsaoZnExfSePKstzIMrxJDyBA/exec";
     function formatDDMMYY(d){return ('0'+d.getDate()).slice(-2)+('0'+(d.getMonth()+1)).slice(-2)+String(d.getFullYear()).slice(-2);}
-    function lettersOnly(s){return (s||'').replace(/[^A-Za-z]/g,'');}
+    function lettersOnly(s){return(s||'').replace(/[^A-Za-z]/g,'');}
     const refEl=document.getElementById('quoteRef');let currentRef='EW-—';
     function generateRef(name){const c=lettersOnly(name).toUpperCase();if(c.length<2){currentRef='EW-—';}else{currentRef='EW-'+c.slice(0,2)+formatDDMMYY(new Date());}refEl.textContent=currentRef;}
     document.getElementById('copyRefBtn').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(currentRef);const t=document.getElementById('toast');t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1200);}catch{alert('Copy failed');}});
+    
     const radios=document.querySelectorAll('input[name="consultChoice"]'),note=document.getElementById('consultNote'),quick=document.getElementById('quickContact'),full=document.getElementById('fullForm');
-    radios.forEach(r=>r.addEventListener('change',()=>{const v=document.querySelector('input[name="consultChoice"]:checked')?.value;if(v==="book"){note.classList.remove('hidden');quick.classList.remove('hidden');full.classList.add('hidden');}else{note.classList.add('hidden');quick.classList.add('hidden');full.classList.remove('hidden');}}));
+    radios.forEach(r=>r.addEventListener('change',()=>{
+      const v=document.querySelector('input[name="consultChoice"]:checked')?.value;
+      if(v==="book"){note.classList.remove('hidden');quick.classList.remove('hidden');full.classList.add('hidden');}
+      else{note.classList.add('hidden');quick.classList.add('hidden');full.classList.remove('hidden');}
+    }));
+    
     [document.getElementById('name'),document.getElementById('nameQuick')].forEach(n=>n?.addEventListener('input',e=>generateRef(e.target.value)));generateRef('');
+    
     const form=document.getElementById('quoteForm'),conf1=document.getElementById('confLine1'),conf2=document.getElementById('confLine2'),confirm=document.getElementById('confirmation');
     form.addEventListener('submit',async e=>{
       e.preventDefault();
       const choice=document.querySelector('input[name="consultChoice"]:checked')?.value;
       if(!choice){alert("Please select your consultation option.");return;}
       if(choice==="book"){
-        for(const id of ['nameQuick','emailQuick','phoneQuick','prefQuick','postcodeQuick','agreeQuick']){const el=document.getElementById(id);if(!el.value||(el.type==='checkbox'&&!el.checked)){alert('Please fill all required fields.');el.focus();return;}}
+        for(const id of ['nameQuick','emailQuick','phoneQuick','prefQuick','postcodeQuick','agreeQuick']){
+          const el=document.getElementById(id);
+          if(!el.value||(el.type==='checkbox'&&!el.checked)){
+            alert('Please fill all required fields.');
+            el.focus();return;
+          }
+        }
       }else{
-        for(const id of ['name','email','phone']){const el=document.getElementById(id);if(!el.value){alert('Please complete all required fields.');el.focus();return;}}
+        for(const id of ['name','email','phone']){
+          const el=document.getElementById(id);
+          if(!el.value){
+            alert('Please complete all required fields.');
+            el.focus();return;
+          }
+        }
       }
-      const data=new FormData(form);data.append('quoteRef',currentRef);
-      await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(Object.fromEntries(data.entries()))});
+      const data=new FormData(form);
+      data.append('quoteRef',currentRef);
+      await fetch(SCRIPT_URL,{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(Object.fromEntries(data.entries()))
+      });
       form.querySelectorAll('section.card,.submitbar').forEach(s=>s.classList.add('hidden'));
       confirm.classList.remove('hidden');
       conf1.innerHTML=`Thank you! Your quote reference is <strong>${currentRef}</strong>.`;
-      conf2.textContent=(choice==="book")?"We’ll be in touch to arrange your face-to-face consultation.":"Please send photos/videos quoting your reference so we can prepare your quote.";
+      conf2.textContent=(choice==="book")
+        ?"We’ll be in touch to arrange your face-to-face consultation."
+        :"Please send photos/videos quoting your reference so we can prepare your quote.";
     });
   </script>
 </body>
