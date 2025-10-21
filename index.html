@@ -48,6 +48,36 @@
     .submitbar{margin-top:16px}
     .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:#0f172a;color:#fff;padding:10px 16px;border-radius:999px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s}
     .toast.show{opacity:1}
+
+    /* Loading overlay */
+    #loadingOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.55);
+      backdrop-filter: blur(6px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      z-index: 999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    #loadingOverlay.active {opacity: 1; pointer-events: all;}
+    .spinner {
+      border: 4px solid rgba(255,255,255,0.2);
+      border-top: 4px solid var(--brand);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 14px;
+    }
+    @keyframes spin {0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
@@ -314,9 +344,20 @@
 
   <div class="toast" id="toast">Copied!</div>
 
+  <!-- Loading overlay -->
+  <div id="loadingOverlay">
+    <div class="spinner"></div>
+    Submitting your form…
+  </div>
+
   <script>
-    // ✅ Your confirmed Apps Script endpoint
+    // Your live Apps Script endpoint
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby31Mlrl3suFxIFkIE0eSmPi0h7OFmXSCQcFIVQRO4YsTBgG1PvZCDFFPYVKEjJPHOpFQ/exec";
+
+    // Overlay helpers
+    const overlay=document.getElementById('loadingOverlay');
+    function showOverlay(){overlay.classList.add('active')}
+    function hideOverlay(){overlay.classList.remove('active')}
 
     // Utilities
     function formatDDMMYY(date){const d=('0'+date.getDate()).slice(-2);const m=('0'+(date.getMonth()+1)).slice(-2);const y=String(date.getFullYear()).slice(-2);return d+m+y;}
@@ -405,6 +446,8 @@
 
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
+
+      // Validate the consultation choice
       const choice=document.querySelector('input[name="consultChoice"]:checked')?.value;
       if(!choice){ alert('Please select your consultation option.'); return; }
 
@@ -435,7 +478,7 @@
         }
       }
 
-      // Build payload — supports arrays (checkboxes)
+      // Build payload — support arrays for checkboxes
       const fd=new FormData(form);
       fd.append('quoteRef', currentRef);
       const data={};
@@ -446,25 +489,26 @@
         } else { data[key]=value; }
       });
 
-      // POST to Apps Script
+      // Show loader
+      showOverlay();
+
+      // POST to Apps Script with no-cors (GitHub Pages safe)
       try{
-        const res = await fetch(SCRIPT_URL, {
+        await fetch(SCRIPT_URL, {
           method:'POST',
+          mode:'no-cors',                 // ✨ CORS-safe
           headers:{'Content-Type':'application/json'},
           body:JSON.stringify(data)
         });
-        const result = await res.json();
-        if(!result || result.result!=='success'){
-          alert('There was a problem submitting your form. Please try again.'); 
-          return;
-        }
       }catch(err){
         console.error('Submission error',err);
+        hideOverlay();
         alert('Connection issue — please try again.');
         return;
       }
 
-      // Show confirmation
+      // Success UX (we cannot read response in no-cors mode)
+      hideOverlay();
       form.querySelectorAll('section.card,.submitbar').forEach(sec=>sec.classList.add('hidden'));
       confirmation.classList.remove('hidden');
 
