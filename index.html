@@ -50,34 +50,21 @@
     .toast.show{opacity:1}
 
     /* Loading overlay */
-    #loadingOverlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,0.55);
-      backdrop-filter: blur(6px);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-size: 1.2rem;
-      font-weight: 600;
-      z-index: 999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .25s ease;
+    #loadingOverlay{
+      position:fixed;inset:0;background:rgba(15,23,42,.55);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      color:#fff;font-weight:700;font-size:1.05rem;z-index:999;
+      backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .25s ease;
     }
-    #loadingOverlay.active {opacity: 1; pointer-events: all;}
-    .spinner {
-      border: 4px solid rgba(255,255,255,0.2);
-      border-top: 4px solid var(--brand);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin-bottom: 14px;
-    }
-    @keyframes spin {0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+    #loadingOverlay.active{opacity:1;pointer-events:auto}
+    .spinner{width:42px;height:42px;border-radius:50%;
+      border:4px solid rgba(255,255,255,.25);border-top-color:var(--brand);
+      animation:spin 1s linear infinite;margin-bottom:12px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Confirmation pop */
+    .pop{animation:pop .4s ease}
+    @keyframes pop{0%{transform:scale(.98);opacity:.4}60%{transform:scale(1.02);opacity:1}100%{transform:scale(1)}}
   </style>
 </head>
 <body>
@@ -351,8 +338,8 @@
   </div>
 
   <script>
-    // Your live Apps Script endpoint
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyyTI7ptb2B1dMHFTI_yqSqi7ATnGNa8I8lP7qefYCYXL08W844t0icAwAUV79anwRBgQ/exec";
+    // Live Apps Script endpoint (web app)
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby31Mlrl3suFxIFkIE0eSmPi0h7OFmXSCQcFIVQRO4YsTBgG1PvZCDFFPYVKEjJPHOpFQ/exec";
 
     // Overlay helpers
     const overlay=document.getElementById('loadingOverlay');
@@ -492,13 +479,13 @@
       // Show loader
       showOverlay();
 
-      // POST to Apps Script with no-cors (GitHub Pages safe)
+      // POST to Apps Script with no-cors and NO custom headers (simple request, no preflight)
       try{
         await fetch(SCRIPT_URL, {
           method:'POST',
-          mode:'no-cors',                 // ✨ CORS-safe
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(data)
+          mode:'no-cors',
+          // headers intentionally omitted to avoid preflight; body becomes text/plain
+          body: JSON.stringify(data)
         });
       }catch(err){
         console.error('Submission error',err);
@@ -507,14 +494,16 @@
         return;
       }
 
-      // Success UX (we cannot read response in no-cors mode)
+      // Success UX (cannot read response in no-cors)
       hideOverlay();
       form.querySelectorAll('section.card,.submitbar').forEach(sec=>sec.classList.add('hidden'));
       confirmation.classList.remove('hidden');
+      confirmation.classList.add('pop');
 
       const first=(nameInput?.value || nameQuick?.value || 'there').split(' ')[0];
       confLine1.innerHTML=`Thank you, <strong>${first}</strong>! Your quote reference is <strong>${currentRef}</strong>.`;
-      confLine2.textContent = (choice==='book')
+      const choiceVal=document.querySelector('input[name="consultChoice"]:checked')?.value;
+      confLine2.textContent = (choiceVal==='book')
         ? 'We’ll be in touch shortly to arrange your face-to-face consultation. Please remember to send your photos/videos quoting your reference.'
         : 'Please reply to this WhatsApp chat or email us quoting your reference and include your photos/videos so we can prepare your quote.';
     });
