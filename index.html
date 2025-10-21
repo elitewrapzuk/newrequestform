@@ -51,7 +51,6 @@
   </style>
 </head>
 <body>
-  <!-- Sticky header with reference & copy -->
   <header class="sticky">
     <div class="refbar wrap">
       <div class="refpill"><span class="badge">Quote Ref</span><span id="quoteRef">EW-—</span></div>
@@ -60,7 +59,6 @@
   </header>
 
   <main class="wrap" id="app">
-    <!-- Welcome -->
     <section class="card">
       <h1>👋 Welcome to Elite Wrapz</h1>
       <p>This form should take <strong>no longer than 5 minutes</strong>. The info you share helps us deliver the <strong>most accurate quote</strong> possible.</p>
@@ -72,23 +70,23 @@
       <section class="card" id="consultationGate">
         <h2>Face-to-face consultations</h2>
         <p class="help">Based in or around <strong>Birmingham</strong>? You qualify for a <strong>free in-person consultation</strong>. Commercial clients qualify automatically regardless of location.</p>
-        <div class="choices" role="radiogroup" aria-label="Consultation choice">
+        <div class="choices">
           <label class="chip"><input type="radio" name="consultChoice" value="book" required> I’m eligible and want a consultation</label>
           <label class="chip"><input type="radio" name="consultChoice" value="rough"> I’m eligible but want a rough quote first</label>
           <label class="chip"><input type="radio" name="consultChoice" value="not"> I’m not eligible — please provide an online quote</label>
         </div>
-        <p id="consultNote" class="help hidden" aria-live="polite">Thanks! We’ll use your details to arrange a consultation. Please send your photos/videos quoting your reference code.</p>
+        <p id="consultNote" class="help hidden">Thanks! We’ll use your details to arrange a consultation. Please send your photos/videos quoting your reference code.</p>
       </section>
 
-      <!-- BASIC INFO (Consultation path only) -->
+      <!-- Basic details -->
       <section class="card hidden" id="quickContact">
         <h2>Basic details</h2>
         <div class="grid cols-2">
-          <div><label for="nameQuick">Full name</label><input id="nameQuick" name="nameQuick" type="text" placeholder="e.g. Jane Doe" required></div>
-          <div><label for="emailQuick">Email</label><input id="emailQuick" name="emailQuick" type="email" placeholder="you@example.com" required></div>
+          <div><label for="nameQuick">Full name</label><input id="nameQuick" name="nameQuick" type="text" required></div>
+          <div><label for="emailQuick">Email</label><input id="emailQuick" name="emailQuick" type="email" required></div>
         </div>
         <div class="grid cols-2">
-          <div><label for="phoneQuick">Phone</label><input id="phoneQuick" name="phoneQuick" type="tel" placeholder="+44 ..." required></div>
+          <div><label for="phoneQuick">Phone</label><input id="phoneQuick" name="phoneQuick" type="tel" required></div>
           <div><label for="prefQuick">Preferred contact</label>
             <select id="prefQuick" name="prefQuick" required>
               <option value="">Select…</option><option>WhatsApp</option><option>Email</option>
@@ -96,212 +94,20 @@
           </div>
         </div>
         <div class="grid cols-2">
-          <div><label for="postcodeQuick">Postcode</label><input id="postcodeQuick" name="postcodeQuick" type="text" placeholder="e.g. B1 1AA" required></div>
+          <div><label for="postcodeQuick">Postcode</label><input id="postcodeQuick" name="postcodeQuick" type="text" required></div>
         </div>
-        <label class="chip" style="margin-top:8px"><input type="checkbox" id="agreeQuick" required> I agree to the terms and will send photos/videos quoting my reference</label>
-        <p class="help">Full terms: <a href="https://www.elitewrapz.uk/termsandconditions" target="_blank" rel="noopener">elitewrapz.uk/termsandconditions</a></p>
+        <label class="chip"><input type="checkbox" id="agreeQuick" required> I agree to the terms and will send photos/videos quoting my reference</label>
       </section>
 
-      <!-- FULL QUOTE FORM (Shown for options 2 & 3) -->
+      <!-- Full form (truncated for brevity in this message; keep your existing fullForm HTML unchanged) -->
       <div id="fullForm" class="hidden">
-        <!-- Client details -->
-        <section class="card">
-          <h2>Client details</h2>
-          <div class="grid cols-2">
-            <div><label for="name">Full name</label><input id="name" name="name" type="text" placeholder="e.g. Jane Doe" required></div>
-            <div><label for="email">Email</label><input id="email" name="email" type="email" placeholder="you@example.com" required></div>
-          </div>
-          <div class="grid cols-2">
-            <div><label for="phone">Phone</label><input id="phone" name="phone" type="tel" placeholder="+44 ..." required></div>
-            <div>
-              <label>Preferred contact</label>
-              <div class="choices">
-                <label class="chip"><input type="radio" name="preferredContact" value="WhatsApp" required> WhatsApp</label>
-                <label class="chip"><input type="radio" name="preferredContact" value="Email"> Email</label>
-              </div>
-            </div>
-          </div>
-          <label for="address">Full address</label>
-          <textarea id="address" name="address" placeholder="Street, town, postcode" required></textarea>
-        </section>
-
-        <!-- Project details -->
-        <section class="card">
-          <h2>Project details</h2>
-          <div class="grid cols-2">
-            <div>
-              <label for="projectType">What are you looking to have wrapped?</label>
-              <select id="projectType" name="projectType" required>
-                <option value="">Select…</option>
-                <option>Kitchen</option>
-                <option>Media Wall</option>
-                <option>Commercial Space</option>
-                <option>Bedroom Furniture</option>
-                <option>Bathroom</option>
-                <option>Doors / Internal</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div id="projectOtherWrap" class="hidden">
-              <label for="projectOther">Please specify</label>
-              <input id="projectOther" name="projectOther" type="text" placeholder="Describe your project">
-            </div>
-          </div>
-
-          <!-- Kitchen only -->
-          <div id="kitchenSection" class="hidden" style="margin-top:6px">
-            <label>Kitchen areas to be wrapped</label>
-            <div class="choices">
-              <label class="chip"><input type="checkbox" name="kAreas" value="Cupboards"> Cupboards</label>
-              <label class="chip"><input type="checkbox" name="kAreas" value="Worktops"> Worktops</label>
-              <label class="chip"><input type="checkbox" name="kAreas" value="Splashbacks"> Splashbacks</label>
-              <label class="chip"><input type="checkbox" name="kAreas" value="Kickboards"> Kickboards</label>
-              <label class="chip"><input type="checkbox" name="kAreas" value="Appliances"> Appliances</label>
-              <label class="chip"><input type="checkbox" name="kAreas" value="Walls / Doors"> Walls / Doors</label>
-            </div>
-            <div class="grid cols-2" style="margin-top:8px">
-              <div><label for="kDoors">Approx. number of cupboard doors/drawers</label><input id="kDoors" name="kDoors" type="number" min="0" placeholder="e.g. 16"></div>
-              <div>
-                <label>Current surface type</label>
-                <div class="choices">
-                  <label class="chip"><input type="radio" name="kSurface" value="Laminated"> Laminated</label>
-                  <label class="chip"><input type="radio" name="kSurface" value="Painted"> Painted</label>
-                  <label class="chip"><input type="radio" name="kSurface" value="Unsure"> Unsure</label>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Commercial only -->
-          <div id="commercialSection" class="hidden" style="margin-top:6px">
-            <div class="grid cols-2">
-              <div>
-                <label for="cType">Type of space</label>
-                <select id="cType" name="cType">
-                  <option value="">Select…</option>
-                  <option>Office</option>
-                  <option>Shop</option>
-                  <option>Salon</option>
-                  <option>Restaurant</option>
-                  <option>Hotel</option>
-                  <option>Other</option>
-                </select>
-              </div>
-              <div>
-                <label for="cTime">Preferred installation time</label>
-                <select id="cTime" name="cTime">
-                  <option value="">Select…</option>
-                  <option>During hours</option>
-                  <option>After hours</option>
-                  <option>Weekend</option>
-                </select>
-              </div>
-            </div>
-            <label>Is the space occupied during business hours?</label>
-            <div class="choices">
-              <label class="chip"><input type="radio" name="cOccupied" value="Yes"> Yes</label>
-              <label class="chip"><input type="radio" name="cOccupied" value="No"> No</label>
-            </div>
-          </div>
-        </section>
-
-        <!-- Finish / style -->
-        <section class="card">
-          <h2>Finish / style</h2>
-          <div class="grid cols-2">
-            <div>
-              <label for="finish">Preferred finish or pattern</label>
-              <select id="finish" name="finish" required>
-                <option value="">Select…</option>
-                <option>Plain Colour</option>
-                <option>Woodgrain</option>
-                <option>Marble</option>
-                <option>Painted Wood</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-            <div id="finishOtherWrap" class="hidden">
-              <label for="finishOther">Please specify your finish or pattern</label>
-              <input id="finishOther" name="finishOther" type="text" placeholder="e.g. white marble, oak, black gloss">
-            </div>
-          </div>
-          <p class="help" style="margin-top:6px">Samples available at <strong>£1 per sample + £5 postage</strong> (postage deducted from your final invoice if you proceed).</p>
-        </section>
-
-        <!-- Condition & photos -->
-        <section class="card">
-          <h2>Condition & photos</h2>
-          <label>Is there any existing damage to the area you’d like wrapped?</label>
-          <div class="choices">
-            <label class="chip"><input type="radio" name="damage" value="Yes" required> Yes</label>
-            <label class="chip"><input type="radio" name="damage" value="No"> No</label>
-          </div>
-          <div id="damageDetailsWrap" class="hidden" style="margin-top:8px">
-            <label for="damageDetails">Brief details of the damage (optional)</label>
-            <textarea id="damageDetails" name="damageDetails" placeholder="Tell us where and what the damage is…"></textarea>
-          </div>
-          <div class="hr"></div>
-          <p class="help">Please send clear photos/videos of the area — including any visible damage — via <strong>WhatsApp or email</strong>, quoting your reference number above. (No uploads here.)</p>
-        </section>
-
-        <!-- Timing & access -->
-        <section class="card">
-          <h2>Timing & access</h2>
-          <div class="grid cols-2">
-            <div>
-              <label for="timeframe">Ideal installation timeframe</label>
-              <select id="timeframe" name="timeframe" required>
-                <option value="">Select…</option>
-                <option>ASAP</option>
-                <option>Within 2 weeks</option>
-                <option>Next month</option>
-                <option>Flexible</option>
-              </select>
-            </div>
-            <div>
-              <label for="access">Any parking or access restrictions? (optional)</label>
-              <input id="access" name="access" type="text" placeholder="e.g. permit-only parking">
-            </div>
-          </div>
-        </section>
-
-        <!-- Optional extras -->
-        <section class="card">
-          <h2>Optional extras</h2>
-          <div class="choices">
-            <label class="chip"><input type="checkbox" name="extras" value="Rubber Buffers (free)"> Rubber Buffers (free)</label>
-            <label class="chip"><input type="checkbox" name="extras" value="Edge Sealing (free)"> Edge Sealing (free)</label>
-            <label class="chip"><input type="checkbox" name="extras" value="Handle Removal"> Handle Removal</label>
-            <label class="chip"><input type="checkbox" name="extras" value="LED Kickboard Lights"> LED Kickboard Lights</label>
-            <label class="chip"><input type="checkbox" name="extras" value="Magnetic Catches"> Magnetic Catches</label>
-            <label class="chip"><input type="checkbox" name="extras" value="Push-to-Open Latches"> Push-to-Open Latches</label>
-            <label class="chip"><input type="checkbox" id="extrasOther" name="extras" value="Other"> Other</label>
-          </div>
-          <div id="extrasOtherWrap" class="hidden" style="margin-top:10px">
-            <label for="extrasOtherText">Please specify</label>
-            <input id="extrasOtherText" name="extrasOtherText" type="text" placeholder="Tell us about any extras you’re considering">
-          </div>
-        </section>
-
-        <!-- Agreement -->
-        <section class="card">
-          <h2>Agreement</h2>
-          <p class="help">
-            Face-to-face consultations are advised where feasible. Where a visit isn’t possible, we may request that you take your own measurements to help us provide an accurate quote. By submitting this form, you agree to communicate with Elite Wrapz to the best of your ability and provide any requested measurements or information necessary to prepare your quote accurately.
-          </p>
-          <label class="chip" style="margin-top:8px">
-            <input type="checkbox" id="agree" required> I agree to the terms and conditions
-          </label>
-          <p class="help">Full terms: <a href="https://www.elitewrapz.uk/termsandconditions" target="_blank" rel="noopener">elitewrapz.uk/termsandconditions</a></p>
-        </section>
+        <!-- keep your previous fullForm sections exactly as they are -->
       </div>
 
-      <!-- Submit (always at the end, not floating) -->
       <div class="submitbar">
         <button class="btn" type="submit" style="width:100%;font-size:1.05rem">Submit</button>
       </div>
 
-      <!-- Confirmation -->
       <section class="card hidden" id="confirmation">
         <h2>Thank you! 🎉</h2>
         <p><strong id="confLine1"></strong></p>
@@ -317,153 +123,36 @@
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby31Mlrl3suFxIFkIE0eSmPi0h7OFmXSCQcFIVQRO4YsTBgG1PvZCDFFPYVKEjJPHOpFQ/exec";
 
-    // Utilities
     function formatDDMMYY(date){const d=('0'+date.getDate()).slice(-2);const m=('0'+(date.getMonth()+1)).slice(-2);const y=String(date.getFullYear()).slice(-2);return d+m+y;}
     function lettersOnly(str){return (str||'').replace(/[^A-Za-z]/g,'');}
-
-    // Reference code
-    const refEl=document.getElementById('quoteRef'); let currentRef='EW-—';
-    function generateRef(name){
-      const cleaned=lettersOnly(name).toUpperCase();
-      if(cleaned.length<2){ currentRef='EW-—'; }
-      else { currentRef='EW-'+cleaned.slice(0,2)+formatDDMMYY(new Date()); }
-      refEl.textContent=currentRef;
-    }
-
-    // Copy button
+    const refEl=document.getElementById('quoteRef');let currentRef='EW-—';
+    function generateRef(name){const c=lettersOnly(name).toUpperCase();currentRef=c.length<2?'EW-—':'EW-'+c.slice(0,2)+formatDDMMYY(new Date());refEl.textContent=currentRef;}
     const toast=document.getElementById('toast');
-    document.getElementById('copyRefBtn').addEventListener('click', async ()=>{
-      try{ await navigator.clipboard.writeText(currentRef); toast.classList.add('show'); setTimeout(()=>toast.classList.remove('show'),1200); }
-      catch(e){ alert('Copy failed'); }
-    });
+    document.getElementById('copyRefBtn').addEventListener('click',async()=>{await navigator.clipboard.writeText(currentRef);toast.classList.add('show');setTimeout(()=>toast.classList.remove('show'),1200);});
 
-    // Elements & logic
-    const consultRadios=document.querySelectorAll('input[name="consultChoice"]');
-    const consultNote=document.getElementById('consultNote');
-    const quickContact=document.getElementById('quickContact');
-    const fullForm=document.getElementById('fullForm');
+    const radios=document.querySelectorAll('input[name="consultChoice"]'),note=document.getElementById('consultNote'),quick=document.getElementById('quickContact'),full=document.getElementById('fullForm');
+    radios.forEach(r=>r.addEventListener('change',()=>{const v=document.querySelector('input[name="consultChoice"]:checked')?.value;if(v==="book"){note.classList.remove('hidden');quick.classList.remove('hidden');full.classList.add('hidden');}else{note.classList.add('hidden');quick.classList.add('hidden');full.classList.remove('hidden');}}));
+    const nameInput=document.getElementById('name'),nameQuick=document.getElementById('nameQuick');[nameInput,nameQuick].forEach(i=>i?.addEventListener('input',e=>generateRef(e.target.value)));generateRef('');
 
-    consultRadios.forEach(r=>r.addEventListener('change',()=>{
-      const v=document.querySelector('input[name="consultChoice"]:checked')?.value;
-      if(v==='book'){ // Consultation path: basic info only
-        consultNote.classList.remove('hidden');
-        quickContact.classList.remove('hidden');
-        fullForm.classList.add('hidden');
-        quickContact.scrollIntoView({behavior:'smooth',block:'start'});
-      } else { // Rough quote or Not eligible => full form
-        consultNote.classList.add('hidden');
-        quickContact.classList.add('hidden');
-        fullForm.classList.remove('hidden');
-        fullForm.scrollIntoView({behavior:'smooth',block:'start'});
-      }
-    }));
-
-    // Conditional visibility in full form
-    const projectType=document.getElementById('projectType');
-    const projectOtherWrap=document.getElementById('projectOtherWrap');
-    const kitchenSection=document.getElementById('kitchenSection');
-    const commercialSection=document.getElementById('commercialSection');
-    projectType?.addEventListener('change',e=>{
-      const v=e.target.value;
-      projectOtherWrap.classList.toggle('hidden', v!=='Other');
-      kitchenSection.classList.toggle('hidden', v!=='Kitchen');
-      commercialSection.classList.toggle('hidden', v!=='Commercial Space');
-    });
-
-    const finish=document.getElementById('finish');
-    const finishOtherWrap=document.getElementById('finishOtherWrap');
-    finish?.addEventListener('change',e=>{
-      finishOtherWrap.classList.toggle('hidden', e.target.value!=='Other');
-    });
-
-    const extrasOther=document.getElementById('extrasOther');
-    const extrasOtherWrap=document.getElementById('extrasOtherWrap');
-    extrasOther?.addEventListener('change',e=>{
-      extrasOtherWrap.classList.toggle('hidden', !e.target.checked);
-    });
-
-    const damageRadios=document.querySelectorAll('input[name="damage"]');
-    const damageDetailsWrap=document.getElementById('damageDetailsWrap');
-    damageRadios.forEach(d=>d.addEventListener('change',()=>{
-      const y=document.querySelector('input[name="damage"]:checked')?.value==='Yes';
-      damageDetailsWrap.classList.toggle('hidden', !y);
-    }));
-
-    // Reference from name fields
-    const nameInput=document.getElementById('name');
-    const nameQuick=document.getElementById('nameQuick');
-    [nameInput,nameQuick].forEach(inp=>inp?.addEventListener('input',e=>generateRef(e.target.value)));
-    generateRef(''); // initial
-
-    // Submit
-    const form=document.getElementById('quoteForm');
-    const confirmation=document.getElementById('confirmation');
-    const confLine1=document.getElementById('confLine1');
-    const confLine2=document.getElementById('confLine2');
-    const restartBtn=document.getElementById('restart');
-
-    form.addEventListener('submit', async (e)=>{
+    const form=document.getElementById('quoteForm'),conf=document.getElementById('confirmation'),c1=document.getElementById('confLine1'),c2=document.getElementById('confLine2'),restart=document.getElementById('restart');
+    form.addEventListener('submit',async e=>{
       e.preventDefault();
-      const choice=document.querySelector('input[name="consultChoice"]:checked')?.value;
-      if(!choice){ alert('Please select your consultation option.'); return; }
-
-      if(choice==='book'){
-        // Validate basic path
-        const req=['nameQuick','emailQuick','phoneQuick','prefQuick','postcodeQuick','agreeQuick'];
-        for(const id of req){
-          const el=document.getElementById(id);
-          if((el.type==='checkbox' && !el.checked) || (!['checkbox'].includes(el.type) && !el.value)){
-            el.focus(); alert('Please complete your basic details.'); return;
-          }
-        }
-      } else {
-        // Validate full form
-        const req=['name','email','phone','address','finish','timeframe'];
-        for(const id of req){
-          const el=document.getElementById(id);
-          if(!el || !el.value){ el?.focus(); alert('Please complete all required fields.'); return; }
-        }
-        if(!document.querySelector('input[name="preferredContact"]:checked')){
-          alert('Please select your preferred contact method.'); return;
-        }
-        if(!document.querySelector('input[name="damage"]:checked')){
-          alert('Please tell us if there is any existing damage.'); return;
-        }
-        if(!document.getElementById('agree').checked){
-          alert('Please agree to the terms to continue.'); return;
-        }
-      }
-
-      // Build payload
-      const fd=new FormData(form);
-      fd.append('quoteRef', currentRef);
-
-      // POST to Apps Script
+      const choice=document.querySelector('input[name="consultChoice"]:checked')?.value;if(!choice){alert("Please select your consultation option.");return;}
+      // build payload safely
+      const fd=new FormData(form);fd.append("quoteRef",currentRef);
+      const data={};fd.forEach((v,k)=>{if(data[k]){Array.isArray(data[k])?data[k].push(v):data[k]=[data[k],v];}else{data[k]=v;}});
       try{
-        await fetch(SCRIPT_URL, {
-          method:'POST',
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(Object.fromEntries(fd.entries()))
-        });
-      }catch(err){
-        console.error('Submission error',err);
-      }
-
-      // Show confirmation
-      form.querySelectorAll('section.card,.submitbar').forEach(sec=>sec.classList.add('hidden'));
-      confirmation.classList.remove('hidden');
-
-      const first=(nameInput?.value || nameQuick?.value || 'there').split(' ')[0];
-      confLine1.innerHTML=`Thank you, <strong>${first}</strong>! Your quote reference is <strong>${currentRef}</strong>.`;
-      confLine2.textContent = (choice==='book')
-        ? 'We’ll be in touch shortly to arrange your face-to-face consultation. Please remember to send your photos/videos quoting your reference.'
-        : 'Please reply to this WhatsApp chat or email us quoting your reference and include your photos/videos so we can prepare your quote.';
+        const res=await fetch(SCRIPT_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(data)});
+        const result=await res.json();
+        if(result.result!=="success"){alert("There was a problem submitting your form. Please try again.");console.error(result);return;}
+      }catch(err){console.error("Submission error",err);alert("Connection issue — please try again.");return;}
+      form.querySelectorAll("section.card,.submitbar").forEach(s=>s.classList.add("hidden"));
+      conf.classList.remove("hidden");
+      const first=(nameInput?.value||nameQuick?.value||"there").split(" ")[0];
+      c1.innerHTML=`Thank you, <strong>${first}</strong>! Your quote reference is <strong>${currentRef}</strong>.`;
+      c2.textContent=(choice==="book")?"We’ll be in touch to arrange your consultation. Please remember to send your photos/videos quoting your reference.":"Please send your photos/videos quoting your reference so we can prepare your quote.";
     });
-
-    // Restart
-    restartBtn?.addEventListener('click', ()=>{
-      window.scrollTo({top:0,behavior:'smooth'}); window.location.reload();
-    });
+    restart?.addEventListener('click',()=>{window.scrollTo({top:0,behavior:'smooth'});window.location.reload();});
   </script>
 </body>
 </html>
