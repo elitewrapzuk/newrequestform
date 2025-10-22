@@ -51,6 +51,53 @@
     /* confirmation flourish */
     .reveal{animation:pop .35s ease-out both}
     @keyframes pop{0%{opacity:0;transform:scale(.98) translateY(6px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+
+    /* Frosted glass loading overlay */
+    .loading-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(10px) saturate(1.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease;
+    }
+    .loading-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .loading-content {
+      text-align: center;
+      color: var(--ink);
+      animation: fadeUp .35s ease;
+    }
+    .loading-content p {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #0b2333;
+      margin-top: 16px;
+      letter-spacing: .2px;
+    }
+    .spinner {
+      width: 64px;
+      height: 64px;
+      border: 4px solid rgba(1,250,191,0.25);
+      border-top: 4px solid var(--brand);
+      border-radius: 50%;
+      animation: spin 1s linear infinite, pulseGlow 2s ease-in-out infinite;
+      margin: 0 auto;
+      box-shadow: 0 0 12px rgba(1,250,191,0.35);
+    }
+    @keyframes spin {from{transform: rotate(0)}to{transform: rotate(360deg)}}
+    @keyframes pulseGlow {
+      0%,100% { box-shadow: 0 0 10px rgba(1,250,191,0.25); }
+      50% { box-shadow: 0 0 24px rgba(1,250,191,0.6); }
+    }
+    @keyframes fadeUp {from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
   </style>
 </head>
 <body>
@@ -301,7 +348,7 @@
 
       <!-- Submit (always at the end, not floating) -->
       <div class="submitbar">
-        <button class="btn" type="submit" style="width:100%;font-size:1.05rem">Submit</button>
+        <button class="btn" id="submitBtn" type="submit" style="width:100%;font-size:1.05rem">Submit</button>
       </div>
 
       <!-- Confirmation -->
@@ -317,8 +364,16 @@
 
   <div class="toast" id="toast">Copied!</div>
 
+  <!-- Loading overlay -->
+  <div id="loadingOverlay" class="loading-overlay hidden" aria-hidden="true" role="status" aria-live="polite">
+    <div class="loading-content">
+      <div class="spinner" aria-hidden="true"></div>
+      <p>Submitting your details…</p>
+    </div>
+  </div>
+
   <script>
-    // ✅ Direct Apps Script URL for GitHub Pages (no proxy needed)
+    // ✅ Your Apps Script URL (use your latest deployed "web app" URL)
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzNTXcvvKwXOCNn5-r4-9pvbFz9I2tklbuRDte3x3LtxP5EehuAUsGBSI4FbFD_ixj8/exec";
 
     // Utilities
@@ -399,25 +454,60 @@
     [nameInput,nameQuick].forEach(inp=>inp?.addEventListener('input',e=>generateRef(e.target.value)));
     generateRef(''); // initial
 
+    // Loading overlay helpers
+    const loadingOverlay=document.getElementById('loadingOverlay');
+    function showLoading(){
+      loadingOverlay.classList.remove('hidden');
+      loadingOverlay.classList.add('show');
+      loadingOverlay.setAttribute('aria-hidden','false');
+      document.body.style.pointerEvents='none';
+    }
+    function hideLoading(){
+      loadingOverlay.classList.remove('show');
+      loadingOverlay.setAttribute('aria-hidden','true');
+      setTimeout(()=>loadingOverlay.classList.add('hidden'),250);
+      document.body.style.pointerEvents='auto';
+    }
+
     // Submit
     const form=document.getElementById('quoteForm');
+    const submitBtn=document.getElementById('submitBtn');
     const confirmation=document.getElementById('confirmation');
     const confLine1=document.getElementById('confLine1');
     const confLine2=document.getElementById('confLine2');
     const restartBtn=document.getElementById('restart');
 
+    // Prevent multiple submits via flag
+    let isSubmitting=false;
+
     form.addEventListener('submit', async (e)=>{
       e.preventDefault();
+      if(isSubmitting) return;
+      isSubmitting=true;
+      submitBtn.disabled=true;
+      submitBtn.style.opacity=.7;
+      submitBtn.textContent='Submitting…';
+      showLoading();
+
       const choice=document.querySelector('input[name="consultChoice"]:checked')?.value;
-      if(!choice){ alert('Please select your consultation option.'); return; }
+      if(!choice){
+        hideLoading();
+        isSubmitting=false; submitBtn.disabled=false; submitBtn.style.opacity=1; submitBtn.textContent='Submit';
+        alert('Please select your consultation option.');
+        return;
+      }
 
       if(choice==='book'){
         // Validate basic path
         const req=['nameQuick','emailQuick','phoneQuick','prefQuick','postcodeQuick','agreeQuick'];
         for(const id of req){
           const el=document.getElementById(id);
-          if((el.type==='checkbox' && !el.checked) || (!['checkbox'].includes(el.type) && !el.value)){
-            el.focus(); alert('Please complete your basic details.'); return;
+          const isInvalid = (el.type==='checkbox' && !el.checked) || (el.type!=='checkbox' && !el.value);
+          if(isInvalid){
+            hideLoading();
+            isSubmitting=false; submitBtn.disabled=false; submitBtn.style.opacity=1; submitBtn.textContent='Submit';
+            el.focus(); alert('Please complete your basic details.');
+            return;
           }
         }
       } else {
@@ -425,16 +515,27 @@
         const req=['name','email','phone','address','finish','timeframe'];
         for(const id of req){
           const el=document.getElementById(id);
-          if(!el || !el.value){ el?.focus(); alert('Please complete all required fields.'); return; }
+          if(!el || !el.value){
+            hideLoading();
+            isSubmitting=false; submitBtn.disabled=false; submitBtn.style.opacity=1; submitBtn.textContent='Submit';
+            el?.focus(); alert('Please complete all required fields.');
+            return;
+          }
         }
         if(!document.querySelector('input[name="preferredContact"]:checked')){
-          alert('Please select your preferred contact method.'); return;
+          hideLoading(); isSubmitting=false; submitBtn.disabled=false; submitBtn.style.opacity=1; submitBtn.textContent='Submit';
+          alert('Please select your preferred contact method.');
+          return;
         }
         if(!document.querySelector('input[name="damage"]:checked')){
-          alert('Please tell us if there is any existing damage.'); return;
+          hideLoading(); isSubmitting=false; submitBtn.disabled=false; submitBtn.style.opacity=1; submitBtn.textContent='Submit';
+          alert('Please tell us if there is any existing damage.');
+          return;
         }
         if(!document.getElementById('agree').checked){
-          alert('Please agree to the terms to continue.'); return;
+          hideLoading(); isSubmitting=false; submitBtn.disabled=false; submitBtn.style.opacity=1; submitBtn.textContent='Submit';
+          alert('Please agree to the terms to continue.');
+          return;
         }
       }
 
@@ -449,32 +550,39 @@
         } else { data[key]=value; }
       });
 
-      // POST to Apps Script (GitHub Pages safe)
+      // POST to Apps Script (GitHub/Netlify safe: send JSON as text/plain to avoid CORS preflight)
       try{
         await fetch(SCRIPT_URL, {
-  method: 'POST',
-  headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // <- key line
-  body: JSON.stringify(data)                                // send JSON as text
-});
+          method:'POST',
+          mode:'no-cors', // we don’t need to read the response
+          headers:{'Content-Type':'text/plain;charset=utf-8'},
+          body:JSON.stringify(data)
+        });
       }catch(err){
+        // Keep UX friendly even if network hiccups; Apps Script often still receives the payload
         console.error('Submission error',err);
-        // Even on network flake, keep UX friendly
       }
 
-      // Show confirmation immediately (we can’t read JSON due to no-cors)
+      // Reveal confirmation, hide the form
       form.querySelectorAll('section.card,.submitbar').forEach(sec=>sec.classList.add('hidden'));
       confirmation.classList.remove('hidden');
 
-      const first=(nameInput?.value || nameQuick?.value || 'there').split(' ')[0];
+      // Build confirmation lines
+      const first=(document.getElementById('name')?.value || document.getElementById('nameQuick')?.value || 'there').split(' ')[0];
       confLine1.innerHTML=`Thank you, <strong>${first}</strong>! Your quote reference is <strong>${currentRef}</strong>.`;
       confLine2.textContent = (choice==='book')
         ? 'We’ll be in touch shortly to arrange your face-to-face consultation. Please remember to send your photos/videos quoting your reference.'
         : 'Please reply to this WhatsApp chat or email us quoting your reference and include your photos/videos so we can prepare your quote.';
+
+      // Hide loading after UI swap
+      hideLoading();
+      // Keep submit locked for this session to avoid duplicates
     });
 
     // Restart
     restartBtn?.addEventListener('click', ()=>{
-      window.scrollTo({top:0,behavior:'smooth'}); window.location.reload();
+      window.scrollTo({top:0,behavior:'smooth'});
+      location.reload();
     });
   </script>
 </body>
