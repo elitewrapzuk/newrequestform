@@ -452,11 +452,10 @@
       // POST to Apps Script (GitHub Pages safe)
       try{
         await fetch(SCRIPT_URL, {
-          method:'POST',
-          mode:'no-cors',                 // <- CORS-safe for GitHub Pages
-          headers:{'Content-Type':'application/json'},
-          body:JSON.stringify(data)
-        });
+  method: 'POST',
+  headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // <- key line
+  body: JSON.stringify(data)                                // send JSON as text
+});
       }catch(err){
         console.error('Submission error',err);
         // Even on network flake, keep UX friendly
